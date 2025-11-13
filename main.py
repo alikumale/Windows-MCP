@@ -49,7 +49,6 @@ def powershell_tool(command: str) -> str:
 def state_tool(use_vision:bool=False):
     desktop_state=desktop.get_state(use_vision=use_vision,as_bytes=True)
     interactive_elements=desktop_state.tree_state.interactive_elements_to_string()
-    informative_elements=desktop_state.tree_state.informative_elements_to_string()
     scrollable_elements=desktop_state.tree_state.scrollable_elements_to_string()
     apps=desktop_state.apps_to_string()
     active_app=desktop_state.active_app_to_string()
@@ -65,9 +64,6 @@ def state_tool(use_vision:bool=False):
 
     List of Interactive Elements:
     {interactive_elements or 'No interactive elements found.'}
-
-    List of Informative Elements:
-    {informative_elements or 'No informative elements found.'}
 
     List of Scrollable Elements:
     {scrollable_elements or 'No scrollable elements found.'}

@@ -4,22 +4,14 @@ from tabulate import tabulate
 @dataclass
 class TreeState:
     interactive_nodes:list['TreeElementNode']=field(default_factory=list)
-    informative_nodes:list['TextElementNode']=field(default_factory=list)
     scrollable_nodes:list['ScrollElementNode']=field(default_factory=list)
 
     def interactive_elements_to_string(self) -> str:
         if not self.interactive_nodes:
             return "No interactive elements"
-        headers = ["Label", "App Name", "ControlType", "Name", "Value", "Shortcut", "Coordinates"]
+        headers = ["Label", "App Name", "ControlType", "Name", "Value", "Shortcut", "Coordinates" ,"IsFocused"]
         rows = [node.to_row(idx) for idx, node in enumerate(self.interactive_nodes)]
-        return tabulate(rows, headers=headers, tablefmt="github")
-
-    def informative_elements_to_string(self) -> str:
-        if not self.informative_nodes:
-            return "No informative elements"
-        headers = ["App Name", "Name"]
-        rows = [node.to_row() for node in self.informative_nodes]
-        return tabulate(rows, headers=headers, tablefmt="github")
+        return tabulate(rows, headers=headers, tablefmt="simple")
 
     def scrollable_elements_to_string(self) -> str:
         if not self.scrollable_nodes:
@@ -30,7 +22,7 @@ class TreeState:
         ]
         base_index = len(self.interactive_nodes)
         rows = [node.to_row(idx, base_index) for idx, node in enumerate(self.scrollable_nodes)]
-        return tabulate(rows, headers=headers, tablefmt="github")
+        return tabulate(rows, headers=headers, tablefmt="simple")
     
 @dataclass
 class BoundingBox:
@@ -68,25 +60,16 @@ class Center:
 class TreeElementNode:
     name: str
     control_type: str
+    app_name: str
     value:str
     shortcut: str
     bounding_box: BoundingBox
     center: Center
     xpath:str
-    app_name: str
+    is_focused:bool
 
     def to_row(self, index: int):
-        return [index, self.app_name, self.control_type, self.name, self.value, self.shortcut, self.center.to_string()]
-
-
-@dataclass
-class TextElementNode:
-    name: str
-    app_name: str
-
-    def to_row(self):
-        return [self.app_name, self.name]
-
+        return [index, self.app_name, self.control_type, self.name, self.value, self.shortcut, self.center.to_string(),self.is_focused]
 
 @dataclass
 class ScrollElementNode:
@@ -116,4 +99,4 @@ class ScrollElementNode:
             self.is_focused
         ]
 
-ElementNode=TreeElementNode|TextElementNode|ScrollElementNode
+ElementNode=TreeElementNode|ScrollElementNode
