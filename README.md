@@ -70,7 +70,7 @@ mcp-name: io.github.CursorTouch/Windows-MCP
 
 - Python 3.13+
 - UV (Package Manager) from Astra, install with `pip install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- `English` as the default language in Windows highly preferred or disable the `Launch-Tool` and `Switch-Tool` in the MCP Server for Windows with other languages.
+- `English` as the default language in Windows highly preferred or disable the `App-Tool` in the MCP Server for Windows with other languages.
 
 <details>
   <summary>Install in Claude Desktop</summary>

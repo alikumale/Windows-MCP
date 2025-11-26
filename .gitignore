@@ -161,17 +161,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-archive
-downloads
-uploads
-user_data
 .vscode
-*.dxt
-
-node_modules
-notebooks
-
 .mcpregistry_github_token
 .mcpregistry_registry_token
 sandbox
-notebook.ipynb
+*.ipynb
+*.mcpb

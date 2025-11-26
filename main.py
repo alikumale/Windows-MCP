@@ -41,7 +41,7 @@ mcp=FastMCP(name='windows-mcp',instructions=instructions,lifespan=lifespan)
     name="App-Tool",
     description="Manages Windows applications through launch, resize, and window switching operations.",
     annotations=ToolAnnotations(
-        title="Application Manager",
+        title="App Tool",
         readOnlyHint=False,
         destructiveHint=False,
         idempotentHint=False,
@@ -55,7 +55,7 @@ def app_tool(mode:Literal['launch','resize','switch'],name:str|None=None,window_
     name='Powershell-Tool',
     description='Execute PowerShell commands and return the output with status code',
     annotations=ToolAnnotations(
-        title="PowerShell Command Executor",
+        title="Powershell Tool",
         readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
@@ -70,7 +70,7 @@ def powershell_tool(command: str) -> str:
     name='State-Tool',
     description='Capture comprehensive desktop state including default language used by user interface, focused/opened applications, interactive UI elements (buttons, text fields, menus), informative content (text, labels, status), and scrollable areas. Optionally includes visual screenshot when use_vision=True. Essential for understanding current desktop context and available UI interactions.',
     annotations=ToolAnnotations(
-        title="Desktop State Inspector",
+        title="State Tool",
         readOnlyHint=True,
         openWorldHint=False
     )
@@ -102,7 +102,7 @@ def state_tool(use_vision:bool=False):
     name='Click-Tool',
     description='Click on UI elements at specific coordinates. Supports left/right/middle mouse buttons and single/double/triple clicks. Use coordinates from State-Tool output.',
     annotations=ToolAnnotations(
-        title="Mouse Click Simulator",
+        title="Click Tool",
         readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
@@ -121,7 +121,7 @@ def click_tool(loc:list[int],button:Literal['left','right','middle']='left',clic
     name='Type-Tool',
     description='Type text into input fields, text areas, or focused elements. Set clear=True to replace existing text, False to append. Click on target element coordinates first.',
     annotations=ToolAnnotations(
-        title="Keyboard Input Simulator",
+        title="Type Tool",
         readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
@@ -139,7 +139,7 @@ def type_tool(loc:list[int],text:str,clear:bool=False,press_enter:bool=False)->s
     name='Scroll-Tool',
     description='Scroll at specific coordinates or current mouse position. Use wheel_times to control scroll amount (1 wheel = ~3-5 lines). Essential for navigating lists, web pages, and long content.',
     annotations=ToolAnnotations(
-        title="Scroll Controller",
+        title="Scroll Tool",
         readOnlyHint=False,
         destructiveHint=False,
         idempotentHint=True,
@@ -158,7 +158,7 @@ def scroll_tool(loc:list[int]=None,type:Literal['horizontal','vertical']='vertic
     name='Drag-Tool',
     description='Drag and drop operation from current coordinates to destination coordinates. Useful for moving files, resizing windows, or drag-and-drop interactions.',
     annotations=ToolAnnotations(
-        title="Drag and Drop Controller",
+        title="Drag Tool",
         readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
@@ -176,7 +176,7 @@ def drag_tool(to_loc:list[int])->str:
     name='Move-Tool',
     description='Move mouse cursor to specific coordinates without clicking. Useful for hovering over elements or positioning cursor before other actions.',
     annotations=ToolAnnotations(
-        title="Mouse Cursor Positioner",
+        title="Move Tool",
         readOnlyHint=False,
         destructiveHint=False,
         idempotentHint=True,
@@ -194,7 +194,7 @@ def move_tool(to_loc:list[int])->str:
     name='Shortcut-Tool',
     description='Execute keyboard shortcuts using key combinations. Pass keys as list (e.g., ctrl+c for copy, alt+tab for app switching, win+r for Run dialog, win is for opening the start menu).',
     annotations=ToolAnnotations(
-        title="Keyboard Shortcut Executor",
+        title="Shortcut Tool",
         readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
@@ -209,7 +209,7 @@ def shortcut_tool(shortcut:str):
     name='Wait-Tool',
     description='Pause execution for specified duration in seconds. Useful for waiting for applications to load, animations to complete, or adding delays between actions.',
     annotations=ToolAnnotations(
-        title="Execution Delay",
+        title="Wait Tool",
         readOnlyHint=True,
         openWorldHint=False
     )
@@ -222,7 +222,7 @@ def wait_tool(duration:int)->str:
     name='Scrape-Tool',
     description='Fetch and convert webpage content to markdown format. Provide full URL including protocol (http/https). Returns structured text content suitable for analysis.',
     annotations=ToolAnnotations(
-        title="Web Content Scraper",
+        title="Scrape Tool",
         readOnlyHint=True,
         openWorldHint=True
     )
