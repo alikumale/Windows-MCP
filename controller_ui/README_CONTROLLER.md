@@ -24,7 +24,7 @@ python controller_ui\app.py
 python controller_ui\app.py
 ```
 
-- Use the **Settings** tab to configure Codex command, working directory (passed to `codex e --cd`), model, timeouts, retries, delays, dry-run, confirmation prompts, MCP auto-start/auto-restart, auto-prefixing of `@windows-mcp`, and the global stop hotkey.
+- Use the **Settings** tab to configure Codex command, model, timeouts, retries, delays, dry-run, confirmation prompts, and MCP auto-start/auto-restart.
 - Use the **Tasks** tab to manage task definitions and run them individually or in sequence.
 - The **Scheduler** tab provides a simple daily scheduler for task runs.
 - Logs stream to the **Logs** tab and are also written to `controller_ui\data\app.log`.
@@ -33,4 +33,3 @@ python controller_ui\app.py
 - If `uvx` or `codex` are missing, the UI will display a clear message in the Logs tab.
 - A global STOP hotkey defaults to `Ctrl+Alt+S` when the optional `keyboard` package is available; otherwise, use the STOP button.
 - A basic command blocklist is enabled by default to avoid dangerous commands.
-- The login screen includes a **Reset Password** button that deletes the stored password (`auth.json`) after confirmation.

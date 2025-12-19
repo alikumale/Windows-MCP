@@ -29,7 +29,6 @@ LOG_PATH = DATA_DIR / "app.log"
 
 DEFAULT_CONFIG: Dict[str, object] = {
     "codex_command": "codex",
-    "codex_workdir": "D:\\Program Files\\Github\\mcp-servers\\Windows-MCP-main",
     "model": "",
     "timeout_seconds": 300,
     "retries": 0,
@@ -39,7 +38,6 @@ DEFAULT_CONFIG: Dict[str, object] = {
     "block_dangerous_commands": True,
     "auto_start_mcp": False,
     "auto_restart_mcp": False,
-    "auto_prefix_mcp": True,
     "stop_hotkey": "ctrl+alt+s",
 }
 
@@ -183,7 +181,6 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
         self.password_entry = ttk.Entry(self.login_frame, show="*")
         self.password_entry.pack(pady=10)
         ttk.Button(self.login_frame, text="Submit", command=self._handle_login).pack(pady=10)
-        ttk.Button(self.login_frame, text="Reset Password", command=self._reset_password).pack(pady=5)
         self.login_message = ttk.Label(self.login_frame, text="")
         self.login_message.pack(pady=5)
 
@@ -198,14 +195,6 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
             self.main_frame.pack(fill="both", expand=True)
         else:
             self.login_message.config(text="Invalid password")
-
-    def _reset_password(self) -> None:
-        confirm = messagebox.askyesno("Reset Password", "Delete saved password and require a new one?")
-        if not confirm:
-            return
-        if AUTH_PATH.exists():
-            AUTH_PATH.unlink()
-        self.login_message.config(text="Password reset. Set a new password to continue.")
 
     def _build_main(self) -> None:
         self.status_var = tk.StringVar(value="STOPPED")
@@ -264,7 +253,6 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
         frame = self.settings_tab
         fields = [
             ("Codex command", "codex_command"),
-            ("Codex working dir", "codex_workdir"),
             ("Model (optional)", "model"),
             ("Timeout (seconds)", "timeout_seconds"),
             ("Retries", "retries"),
@@ -288,7 +276,6 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
             ("Block dangerous commands", "block_dangerous_commands"),
             ("Auto start MCP", "auto_start_mcp"),
             ("Auto restart MCP", "auto_restart_mcp"),
-            ("Auto prefix @windows-mcp", "auto_prefix_mcp"),
         ]
         start_row = len(fields)
         for idx, (label, key) in enumerate(bool_settings):
@@ -574,9 +561,8 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
         model = str(self.config_data.get("model", "")).strip()
         if model:
             command.extend(["--model", model])
-        workdir = str(self.config_data.get("codex_workdir", "")).strip()
-        if workdir:
-            command.extend(["--cd", workdir])
+        timeout = int(float(self.config_data.get("timeout_seconds", 300)))
+        command.extend(["--timeout", str(timeout)])
         return command
 
     def _is_blocked(self, prompt: str) -> bool:
@@ -587,8 +573,6 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
 
     def run_task(self, task: Dict[str, str]) -> bool:
         prompt = task.get("prompt", "")
-        if self.config_data.get("auto_prefix_mcp", True) and not prompt.strip().startswith("@windows-mcp"):
-            prompt = f"@windows-mcp {prompt}" if prompt else "@windows-mcp"
         if self._is_blocked(prompt):
             logging.warning("Task '%s' blocked due to dangerous command", task.get("name"))
             return False
@@ -598,15 +582,11 @@ class ControllerApp(tk.Tk):  # pragma: no cover - UI heavy
                 logging.info("User cancelled task '%s'", task.get("name"))
                 return False
 
-        command = self._build_codex_command(prompt)
-        workdir = str(self.config_data.get("codex_workdir", "")).strip()
-        logging.info("Codex command: %s", " ".join(command))
-        logging.info("Working directory: %s", workdir or "<not set>")
-
         if self.config_data.get("dry_run", False):
             logging.info("Dry run: would execute task '%s' with prompt: %s", task.get("name"), prompt)
             return True
 
+        command = self._build_codex_command(prompt)
         logging.info("Running task '%s'", task.get("name"))
 
         try:
