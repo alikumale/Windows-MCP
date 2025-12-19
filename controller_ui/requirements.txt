@@ -1,0 +1,1 @@
+keyboard>=0.13.5; platform_system == "Windows"
